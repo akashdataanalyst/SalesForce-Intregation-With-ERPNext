@@ -31,3 +31,36 @@ Authentication mein API token configure karenge.
 Lekin pehle integration ko simple rakhne ke liye main code Authorization: token ... ke saath de raha hoon. Testing successful hone ke baad credentials ko Named Credential/Custom Metadata mein shift karna better hai.
 
 
+Step 3 — External Credential banao
+
+Salesforce:
+
+Setup → Quick Find → External Credentials
+
+→ New
+
+Fill karo:
+
+Label: ERPNext External Credential
+Name: ERPNext_External_Credential
+Authentication Protocol: Custom
+Authentication Parameters: abhi default/blank rakho
+
+Phir Save.
+
+Step 2 — Principal add karo
+
+External Credential open karo.
+
+Neeche Principals section mein:
+
+New
+
+Fill:
+
+Parameter Name: ERPNext Principal
+Sequence Number: 1
+
+Save karo.
+
+Agar Authentication Parameters mein option aaye to abhi kuch add mat karo.
