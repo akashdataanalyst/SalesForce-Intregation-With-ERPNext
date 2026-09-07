@@ -1,0 +1,33 @@
+STEP 1 — Salesforce mein field banao
+
+Salesforce:
+
+Setup → Object Manager → Forecast → Fields & Relationships → New
+
+Create:
+
+Field Label: ERPNext Forecast Name
+Field Name: ERPNext_Forecast_Name
+Type: Text
+Length: 100
+
+
+STEP 2 — ERPNext authentication
+
+Production mein API key/secret ko Apex class mein hard-code mat rakho.
+
+Best method:
+
+Setup → Named Credentials
+
+Create:
+
+Label: ERPNext
+Name: ERPNext
+URL: https://erp.calco.in
+
+Authentication mein API token configure karenge.
+
+Lekin pehle integration ko simple rakhne ke liye main code Authorization: token ... ke saath de raha hoon. Testing successful hone ke baad credentials ko Named Credential/Custom Metadata mein shift karna better hai.
+
+
