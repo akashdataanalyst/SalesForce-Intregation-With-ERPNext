@@ -1,0 +1,24 @@
+function checkSalesForecastFields() {
+
+  const url =
+    ERP_URL +
+    "/api/resource/Sales%20Forecast/SF26-000005";
+
+  const options = {
+    method: "get",
+    headers: {
+      "Authorization": "token " + API_KEY + ":" + API_SECRET
+    },
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+
+  Logger.log(
+    "STATUS: " + response.getResponseCode()
+  );
+
+  Logger.log(
+    "RESPONSE:\n" + response.getContentText()
+  );
+}
