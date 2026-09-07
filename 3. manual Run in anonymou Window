@@ -1,0 +1,86 @@
+
+___________________
+Id forecastId = 'a0Qe1000005lcH2EAI';
+
+Set<Id> ids = new Set<Id>();
+ids.add(forecastId);
+
+System.enqueueJob(
+    new ForecastERPNextQueueable(ids)
+);
+
+
+
+______________________________________________________________________________________
+
+HttpRequest req = new HttpRequest();
+
+req.setEndpoint(
+    'https://erp.calco.in/api/resource/Sales%20Forecast'
+);
+
+req.setMethod('POST');
+
+req.setHeader(
+    'Content-Type',
+    'application/json'
+);
+
+req.setHeader(
+    'Authorization',
+    'token 72109323e9d5fba:efb5348764566fe'
+);
+
+Map<String, Object> payload = new Map<String, Object>();
+
+payload.put('company', 'Calco PolyTechnik Pvt Ltd');
+payload.put('posting_date', '2026-11-07');
+payload.put('from_date', '2026-11-01');
+payload.put('frequency', 'Monthly');
+payload.put('demand_number', 1);
+payload.put('parent_warehouse', 'All Warehouses - CPPL');
+
+
+List<Object> selectedItems = new List<Object>();
+
+Map<String, Object> selectedItem =
+    new Map<String, Object>();
+
+selectedItem.put('item_code', 'AD404');
+selectedItem.put('demand_qty', 120);
+selectedItem.put('warehouse', 'All Warehouses - CPPL');
+selectedItem.put('delivery_date', '2026-11-30');
+
+selectedItems.add(selectedItem);
+
+payload.put('selected_items', selectedItems);
+
+
+List<Object> items = new List<Object>();
+
+Map<String, Object> item =
+    new Map<String, Object>();
+
+item.put('item_code', 'AD404');
+item.put('demand_qty', 120);
+item.put('uom', 'Kg');
+item.put('delivery_date', '2026-11-30');
+item.put('warehouse', 'All Warehouses - CPPL');
+
+items.add(item);
+
+payload.put('items', items);
+
+
+req.setBody(JSON.serialize(payload));
+
+Http http = new Http();
+
+HttpResponse res = http.send(req);
+
+System.debug('STATUS = ' + res.getStatusCode());
+System.debug('RESPONSE = ' + res.getBody());
+
+
+
+
