@@ -1,0 +1,167 @@
+
+const ERP_URL = "https://erp.calco.in";
+const API_KEY = "72109323e9d5fba";
+const API_SECRET = "efb5348764566fe";
+
+function checkSalesForecastFields() {
+
+
+// const url = ERP_URL +"/api/resource/Sales%20Forecast/SF26-000005"; ye apni Doc ka Url hai 
+
+
+  const url =
+    ERP_URL +
+    "/api/resource/Sales%20Forecast/SF26-000005";
+
+  const options = {
+    method: "get",
+    headers: {
+      "Authorization": "token " + API_KEY + ":" + API_SECRET
+    },
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+
+  Logger.log(
+    "STATUS: " + response.getResponseCode()
+  );
+
+  Logger.log(
+    "RESPONSE:\n" + response.getContentText()
+  );
+}
+
+
+
+
+
+
+
+function createAndSubmitSalesForecast() {
+
+  const createUrl = ERP_URL + "/api/resource/Sales%20Forecast";
+
+  const payload = {
+    company: "Calco PolyTechnik Pvt Ltd",
+
+    posting_date: "2026-11-07",
+    from_date: "2026-11-01",
+
+    frequency: "Monthly",
+
+    // Number of Weeks / Months = 1
+    demand_number: 1,
+
+    parent_warehouse: "All Warehouses - CPPL",
+
+    selected_items: [
+      {
+        item_code: "AD404",
+        demand_qty: 120,
+        warehouse: "All Warehouses - CPPL",
+        delivery_date: "2026-11-30"
+      }
+    ],
+
+    items: [
+      {
+        item_code: "AD404",
+        demand_qty: 120,
+        uom: "Kg",
+        delivery_date: "2026-11-30",
+        warehouse: "All Warehouses - CPPL"
+      }
+    ]
+  };
+
+  const createOptions = {
+    method: "post",
+    contentType: "application/json",
+    headers: {
+      "Authorization": "token " + API_KEY + ":" + API_SECRET
+    },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+
+  // STEP 1: CREATE
+  const createResponse = UrlFetchApp.fetch(
+    createUrl,
+    createOptions
+  );
+
+  Logger.log(
+    "CREATE STATUS: " + createResponse.getResponseCode()
+  );
+
+  Logger.log(
+    "CREATE RESPONSE:\n" + createResponse.getContentText()
+  );
+
+  if (
+    createResponse.getResponseCode() < 200 ||
+    createResponse.getResponseCode() >= 300
+  ) {
+    Logger.log("CREATE FAILED - Submit nahi kiya jayega.");
+    return;
+  }
+
+  const createData = JSON.parse(
+    createResponse.getContentText()
+  );
+
+  const forecastName = createData.data.name;
+
+  Logger.log(
+    "Created Forecast: " + forecastName
+  );
+
+
+  // STEP 2: SUBMIT CREATED FORECAST
+  const submitUrl =
+    ERP_URL +
+    "/api/resource/Sales%20Forecast/" +
+    encodeURIComponent(forecastName);
+
+  const submitPayload = {
+    docstatus: 1
+  };
+
+  const submitOptions = {
+    method: "put",
+    contentType: "application/json",
+    headers: {
+      "Authorization": "token " + API_KEY + ":" + API_SECRET
+    },
+    payload: JSON.stringify(submitPayload),
+    muteHttpExceptions: true
+  };
+
+  const submitResponse = UrlFetchApp.fetch(
+    submitUrl,
+    submitOptions
+  );
+
+  Logger.log(
+    "SUBMIT STATUS: " + submitResponse.getResponseCode()
+  );
+
+  Logger.log(
+    "SUBMIT RESPONSE:\n" + submitResponse.getContentText()
+  );
+
+  // STEP 3: RESULT
+  if (
+    submitResponse.getResponseCode() >= 200 &&
+    submitResponse.getResponseCode() < 300
+  ) {
+    Logger.log(
+      "SUCCESS: " + forecastName + " Submitted Successfully ✅"
+    );
+  } else {
+    Logger.log(
+      "SUBMIT FAILED for " + forecastName
+    );
+  }
+}
