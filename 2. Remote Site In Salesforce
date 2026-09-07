@@ -1,0 +1,17 @@
+2. Agar "Unauthorized endpoint" aaye
+
+Salesforce:
+
+Setup → Remote Site Settings → New Remote Site
+
+Fill:
+
+Remote Site Name:
+ERPNext
+
+Remote Site URL:
+https://erp.calco.in
+
+Save.
+
+Phir Anonymous Window wala test dobara run karo.
