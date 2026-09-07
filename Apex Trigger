@@ -1,0 +1,34 @@
+trigger ForecastERPNextTrigger on Forecast__c (after insert, after update) {
+
+    Set<Id> forecastIds = new Set<Id>();
+
+    if (Trigger.isInsert) {
+
+        for (Forecast__c f : Trigger.new) {
+            forecastIds.add(f.Id);
+        }
+
+    }
+
+    if (Trigger.isUpdate) {
+
+        for (Forecast__c f : Trigger.new) {
+
+            Forecast__c oldF = Trigger.oldMap.get(f.Id);
+
+            if (
+                f.Forecast_Update_Date__c != oldF.Forecast_Update_Date__c ||
+                f.Grade__c != oldF.Grade__c ||
+                f.Forecast_Quantity__c != oldF.Forecast_Quantity__c
+            ) {
+                forecastIds.add(f.Id);
+            }
+        }
+    }
+
+    if (!forecastIds.isEmpty()) {
+        System.enqueueJob(
+            new ForecastERPNextQueueable(forecastIds)
+        );
+    }
+}
